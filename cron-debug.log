@@ -1,0 +1,4 @@
+fatal: cannot lock ref 'HEAD': is at cca41baee377ddacb89760fc8de2803c4ea671c2 but expected 20d288bcbea235ebbd013f303fab3570bf4d6ec7
+failed to store: -61
+To https://github.com/tylerhennessy96-lgtm/hammersmithbridge.git
+   20d288b..cca41ba  main -> main
