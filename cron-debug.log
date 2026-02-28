@@ -3,3 +3,17 @@ fatal: cannot lock ref 'HEAD': is at 9e841a9bf24b03f1366c333862f6e0fad392df1a bu
  3 files changed, 16 insertions(+), 2 deletions(-)
 fatal: could not read Password for 'https://tylerhennessy96-lgtm@github.com': Device not configured
 fatal: could not read Password for 'https://tylerhennessy96-lgtm@github.com': Device not configured
+On branch main
+Your branch is ahead of 'origin/main' by 3 commits.
+  (use "git push" to publish your local commits)
+
+nothing to commit, working tree clean
+fatal: could not read Password for 'https://tylerhennessy96-lgtm@github.com': Device not configured
+fatal: could not read Password for 'https://tylerhennessy96-lgtm@github.com': Device not configured
+fatal: Unable to create '/Users/tylerhennessy/hammersmithbridge/.git/index.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
