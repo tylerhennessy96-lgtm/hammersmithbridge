@@ -64,7 +64,7 @@
     min-height: 100vh;
     background: linear-gradient(165deg, var(--bridge-green-dark) 0%, var(--bridge-green) 40%, var(--thames-blue) 100%);
     display: flex; flex-direction: column; justify-content: center; align-items: center;
-    text-align: center; padding: 4rem 2rem 4rem;
+    text-align: center; padding: 6rem 2rem 4rem; margin-top: 82px; /* nav (48px) + banner (~34px) */
     position: relative; overflow: hidden;
   }
   .hero::before {
@@ -107,11 +107,16 @@
     background: var(--bridge-green-dark);
     border-bottom: 2px solid var(--alert-red);
     padding: 0.5rem 2rem;
-    margin-top: 48px; /* height of nav */
+    position: fixed;
+    top: 48px; /* sits below the nav */
+    left: 0;
+    width: 100%;
+    z-index: 99;
     text-decoration: none;
     cursor: pointer;
     transition: background 0.2s;
     overflow: hidden;
+    box-sizing: border-box;
   }
   .latest-update-banner:hover {
     background: #14301e;
@@ -755,7 +760,7 @@
 
   /* Offset scroll targets so they land below the fixed nav */
   [id] {
-    scroll-margin-top: 120px;
+    scroll-margin-top: 140px;
   }
 </style>
 </head>
