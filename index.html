@@ -1,0 +1,1640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fix Hammersmith Bridge — The Longest Traffic Tantrum in London History</title>
+<meta name="description" content="Hammersmith Bridge has been closed to cars since April 2019. Track the cost, the delays, and the absurdity.">
+<style>
+  :root {
+    --bridge-green: #2D5F3E;
+    --bridge-green-dark: #1A3D27;
+    --bridge-green-light: #3A7A50;
+    --thames-blue: #1B4F72;
+    --thames-light: #2E86C1;
+    --thames-pale: #D4E6F1;
+    --iron-grey: #4A4A4A;
+    --gold-accent: #D4A843;
+    --cream: #FAF8F0;
+    --warm-white: #FEFCF6;
+    --alert-red: #C0392B;
+    --alert-orange: #E67E22;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    background: var(--cream);
+    color: var(--iron-grey);
+    line-height: 1.7;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    background: var(--bridge-green-dark);
+    border-bottom: 3px solid var(--gold-accent);
+    padding: 0.7rem 2rem;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  nav .logo, nav a.logo, nav a.logo:visited, nav a.logo:hover, nav a.logo:active {
+    color: var(--gold-accent);
+    font-size: 1.1rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  nav .nav-links { display: flex; gap: 1.5rem; }
+  nav .nav-links a {
+    color: var(--thames-pale);
+    text-decoration: none;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    transition: color 0.2s;
+  }
+  nav .nav-links a:hover { color: var(--gold-accent); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    background: linear-gradient(165deg, var(--bridge-green-dark) 0%, var(--bridge-green) 40%, var(--thames-blue) 100%);
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    text-align: center; padding: 4rem 2rem 4rem;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5 Q45 15 30 30 Q15 15 30 5' fill='none' stroke='rgba(212,168,67,0.06)' stroke-width='1'/%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+  .hero .bridge-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.9;
+  }
+  .hero h1 {
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    color: #fff;
+    font-weight: 700;
+    max-width: 800px;
+    line-height: 1.2;
+    margin-bottom: 0.5rem;
+  }
+  .hero h1 .highlight {
+    color: var(--gold-accent);
+    display: block;
+    font-style: italic;
+  }
+  .hero .subtitle {
+    color: var(--thames-pale);
+    font-size: 1.15rem;
+    max-width: 600px;
+    margin: 1rem auto 2.5rem;
+    font-style: italic;
+  }
+
+  /* ── LATEST UPDATE BANNER ── */
+  .latest-update-banner {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: var(--bridge-green-dark);
+    border-bottom: 2px solid var(--alert-red);
+    padding: 0.5rem 2rem;
+    margin-top: 48px; /* height of nav */
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s;
+    overflow: hidden;
+  }
+  .latest-update-banner:hover {
+    background: #14301e;
+  }
+  .update-pulse {
+    width: 8px;
+    height: 8px;
+    background: var(--alert-red);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+    flex-shrink: 0;
+  }
+  .update-label {
+    background: var(--alert-red);
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 0.15rem 0.5rem;
+    border-radius: 3px;
+    letter-spacing: 1px;
+    font-family: -apple-system, sans-serif;
+    flex-shrink: 0;
+  }
+  .update-date {
+    color: var(--gold-accent);
+    font-size: 0.82rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .update-text {
+    color: rgba(255,255,255,0.75);
+    font-size: 0.82rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .update-arrow {
+    color: var(--gold-accent);
+    font-size: 1rem;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 768px) {
+    .latest-update-banner { padding: 0.5rem 1rem; }
+    .update-text { white-space: normal; font-size: 0.75rem; }
+  }
+  @media (max-width: 420px) {
+    .latest-update-banner { flex-wrap: wrap; gap: 0.3rem; }
+    .update-text { white-space: normal; font-size: 0.72rem; flex-basis: 100%; order: 5; margin-top: 0.2rem; }
+    .update-arrow { display: none; }
+    .update-label { font-size: 0.58rem; padding: 0.12rem 0.4rem; }
+    .update-date { font-size: 0.75rem; }
+  }
+
+  /* ── PHOTO SECTIONS ── */
+  .photo-banner {
+    width: 100%;
+    max-height: 450px;
+    overflow: hidden;
+    position: relative;
+  }
+  .photo-banner img {
+    width: 100%;
+    height: 450px;
+    object-fit: cover;
+    display: block;
+  }
+  .photo-banner .photo-placeholder {
+    width: 100%;
+    height: 450px;
+    background: linear-gradient(135deg, #2a2a2a 0%, #3d3d3d 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+    font-size: 0.85rem;
+    font-style: italic;
+    gap: 0.5rem;
+  }
+  .photo-banner .photo-placeholder .placeholder-icon {
+    font-size: 2.5rem;
+    opacity: 0.3;
+  }
+  .photo-banner .photo-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.7));
+    color: rgba(255,255,255,0.85);
+    padding: 2rem 2rem 1rem;
+    font-size: 0.82rem;
+    font-style: italic;
+  }
+  .photo-banner .photo-caption strong {
+    color: #fff;
+    font-style: normal;
+  }
+
+  .photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+  .photo-grid-item {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .photo-grid-item img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    display: block;
+  }
+  .photo-grid-item .photo-placeholder {
+    width: 100%;
+    height: 220px;
+    background: linear-gradient(135deg, #e8e6de 0%, #d4d0c4 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    font-size: 0.78rem;
+    font-style: italic;
+    gap: 0.3rem;
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+  }
+  .photo-grid-item .photo-placeholder .placeholder-icon {
+    font-size: 1.8rem;
+    opacity: 0.3;
+  }
+  .photo-grid-item .photo-grid-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.75));
+    color: rgba(255,255,255,0.9);
+    padding: 1.5rem 0.8rem 0.6rem;
+    font-size: 0.75rem;
+  }
+  .photo-grid-item .photo-grid-caption strong {
+    display: block;
+    font-size: 0.82rem;
+    margin-bottom: 0.15rem;
+  }
+
+  .photo-section-label {
+    text-align: center;
+    padding: 2rem 2rem 1rem;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  .photo-section-label h3 {
+    font-size: 1.2rem;
+    color: var(--bridge-green-dark);
+    margin-bottom: 0.3rem;
+  }
+  .photo-section-label p {
+    font-size: 0.85rem;
+    color: #999;
+    font-style: italic;
+  }
+
+  @media (max-width: 768px) {
+    .photo-banner img, .photo-banner .photo-placeholder { height: 280px; }
+    .photo-grid-item img, .photo-grid-item .photo-placeholder { height: 180px; }
+  }
+
+  /* ── LIVE COUNTERS ── */
+  .counters {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.2rem;
+    max-width: 1100px;
+    width: 100%;
+    margin: 0 auto;
+  }
+  .counter-card {
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(212,168,67,0.3);
+    border-radius: 12px;
+    padding: 1.5rem 1rem;
+    text-align: center;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+  .counter-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--gold-accent);
+  }
+  .counter-card .number {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--gold-accent);
+    font-family: 'Courier New', monospace;
+    line-height: 1.1;
+  }
+  .counter-card .label {
+    color: rgba(255,255,255,0.85);
+    font-size: 0.82rem;
+    margin-top: 0.4rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .counter-card .source {
+    color: rgba(255,255,255,0.45);
+    font-size: 0.65rem;
+    margin-top: 0.5rem;
+    font-style: italic;
+  }
+
+  /* ── SECTION STYLES ── */
+  section { padding: 5rem 2rem; }
+  .section-inner { max-width: 900px; margin: 0 auto; }
+  .section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+  .section-header h2 {
+    font-size: 2rem;
+    color: var(--bridge-green-dark);
+    margin-bottom: 0.5rem;
+  }
+  .section-header .section-rule {
+    width: 60px;
+    height: 3px;
+    background: var(--gold-accent);
+    margin: 0.8rem auto;
+    border: none;
+  }
+  .section-header p {
+    color: #777;
+    font-style: italic;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* ── ABSURDITY HIGHLIGHTS ── */
+  .absurdity-section { background: var(--warm-white); }
+  .absurdity-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+  .absurdity-card {
+    background: #fff;
+    border-left: 4px solid var(--alert-red);
+    border-radius: 0 8px 8px 0;
+    padding: 1.5rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .absurdity-card h3 {
+    font-size: 1.05rem;
+    color: var(--bridge-green-dark);
+    margin-bottom: 0.5rem;
+  }
+  .absurdity-card p {
+    font-size: 0.92rem;
+    color: #666;
+  }
+  .absurdity-card .absurd-stat {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--alert-red);
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+
+  /* ── TIMELINE ── */
+  .timeline-section { background: var(--cream); }
+  .timeline {
+    position: relative;
+    padding-left: 3rem;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 12px;
+    top: 0; bottom: 0;
+    width: 3px;
+    background: linear-gradient(to bottom, var(--bridge-green), var(--thames-blue), var(--alert-red));
+    border-radius: 2px;
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1rem;
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -2.45rem;
+    top: 0.35rem;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    border: 3px solid var(--bridge-green);
+    background: var(--cream);
+    z-index: 1;
+  }
+  .timeline-item.crisis::before { border-color: var(--alert-red); background: #FDE8E5; }
+  .timeline-item.progress::before { border-color: var(--thames-light); background: #E8F4FD; }
+  .timeline-item.absurd::before { border-color: var(--alert-orange); background: #FEF3E2; }
+  .timeline-item.latest {
+    background: rgba(212,168,67,0.08);
+    border: 1px solid rgba(212,168,67,0.3);
+    border-radius: 8px;
+    padding: 1.2rem 1.5rem;
+    margin-left: -1rem;
+    padding-left: 2.5rem;
+  }
+  .timeline-item.latest::before {
+    border-color: var(--gold-accent);
+    background: var(--gold-accent);
+    box-shadow: 0 0 0 4px rgba(212,168,67,0.2);
+  }
+  .timeline-item.latest .timeline-date {
+    color: var(--gold-accent);
+  }
+  .latest-tag {
+    display: inline-block;
+    background: var(--gold-accent);
+    color: var(--bridge-green-dark);
+    font-size: 0.6rem;
+    font-weight: 700;
+    padding: 0.1rem 0.4rem;
+    border-radius: 3px;
+    letter-spacing: 1px;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+    font-family: -apple-system, sans-serif;
+  }
+
+  .timeline-date {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--thames-blue);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 0.3rem;
+  }
+  .timeline-item h3 {
+    font-size: 1.1rem;
+    color: var(--bridge-green-dark);
+    margin-bottom: 0.4rem;
+  }
+  .timeline-item p {
+    font-size: 0.92rem;
+    color: #666;
+  }
+  .timeline-item .who-tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 3px;
+    margin-top: 0.4rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .tag-council { background: #E8F8F5; color: #1ABC9C; }
+  .tag-govt { background: #F4ECF7; color: #8E44AD; }
+  .tag-tfl { background: #EBF5FB; color: #2980B9; }
+  .tag-engineers { background: #FEF9E7; color: #F39C12; }
+
+  /* ── BLAME TRACKER ── */
+  .blame-section { background: var(--warm-white); }
+  .blame-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+  .blame-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    text-align: center;
+  }
+  .blame-card h3 {
+    font-size: 1rem;
+    color: var(--bridge-green-dark);
+    margin-bottom: 0.3rem;
+  }
+  .blame-card .blame-role {
+    font-size: 0.78rem;
+    color: #999;
+    font-style: italic;
+    margin-bottom: 0.8rem;
+  }
+  .blame-bar-container {
+    background: #f0f0f0;
+    border-radius: 6px;
+    height: 12px;
+    overflow: hidden;
+    margin: 0.5rem 0;
+  }
+  .blame-bar {
+    height: 100%;
+    border-radius: 6px;
+    transition: width 1s ease;
+  }
+  .blame-card .blame-detail {
+    font-size: 0.82rem;
+    color: #888;
+    margin-top: 0.5rem;
+  }
+
+  /* ── WHAT IF ── */
+  .whatif-section {
+    background: linear-gradient(135deg, var(--thames-blue), var(--bridge-green-dark));
+    color: #fff;
+  }
+  .whatif-section .section-header h2 { color: #fff; }
+  .whatif-section .section-header p { color: rgba(255,255,255,0.7); }
+  .whatif-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+  }
+  .whatif-card {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 10px;
+    padding: 1.5rem;
+  }
+  .whatif-card h3 {
+    font-size: 1rem;
+    color: var(--gold-accent);
+    margin-bottom: 0.5rem;
+  }
+  .whatif-card p {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.8);
+  }
+
+  /* ── IDEAS / VOTE ── */
+  .ideas-section { background: var(--cream); }
+  .ideas-form {
+    max-width: 600px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  }
+  .ideas-form h3 {
+    font-size: 1.2rem;
+    color: var(--bridge-green-dark);
+    margin-bottom: 0.5rem;
+  }
+  .ideas-form p {
+    color: #888;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+  }
+  .form-group { margin-bottom: 1rem; }
+  .form-group label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--iron-grey);
+    margin-bottom: 0.3rem;
+  }
+  .form-group input, .form-group textarea, .form-group select {
+    width: 100%;
+    padding: 0.7rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 0.92rem;
+    transition: border-color 0.2s;
+  }
+  .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+    outline: none;
+    border-color: var(--bridge-green);
+  }
+  .form-group textarea { resize: vertical; min-height: 80px; }
+  .submit-btn {
+    background: var(--bridge-green);
+    color: #fff;
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.2s;
+    width: 100%;
+  }
+  .submit-btn:hover { background: var(--bridge-green-dark); }
+
+  .popular-ideas { margin-top: 2.5rem; }
+  .popular-ideas h3 {
+    text-align: center;
+    font-size: 1.2rem;
+    color: var(--bridge-green-dark);
+    margin-bottom: 1rem;
+  }
+  .idea-item {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border-radius: 8px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 0.8rem;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+  }
+  .idea-votes {
+    display: flex; flex-direction: column; align-items: center;
+    margin-right: 1.2rem;
+    min-width: 50px;
+  }
+  .vote-btn {
+    background: none; border: none; cursor: pointer;
+    font-size: 1.2rem; color: #ccc;
+    transition: color 0.2s;
+    padding: 0;
+    line-height: 1;
+  }
+  .vote-btn:hover { color: var(--bridge-green); }
+  .vote-btn.voted { color: var(--bridge-green); }
+  .vote-count {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--bridge-green-dark);
+  }
+  .idea-text { font-size: 0.92rem; color: #555; }
+  .idea-author {
+    font-size: 0.75rem; color: #aaa; margin-top: 0.2rem;
+  }
+
+  /* ── METHODOLOGY ── */
+  .methodology-section { background: var(--warm-white); }
+  .methodology-section .section-inner {
+    max-width: 750px;
+  }
+  .methodology-section p {
+    font-size: 0.88rem;
+    color: #777;
+    margin-bottom: 0.8rem;
+  }
+  .methodology-section strong { color: var(--iron-grey); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--bridge-green-dark);
+    color: rgba(255,255,255,0.7);
+    text-align: center;
+    padding: 2.5rem 2rem;
+    font-size: 0.85rem;
+  }
+  footer a { color: var(--gold-accent); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+  footer .footer-tagline {
+    font-size: 1rem;
+    color: #fff;
+    margin-bottom: 0.5rem;
+    font-style: italic;
+  }
+
+  /* ── MOBILE NAV TOGGLE ── */
+  .nav-toggle {
+    display: none;
+    background: none; border: none; color: var(--gold-accent);
+    font-size: 1.5rem; cursor: pointer; padding: 0.3rem;
+    line-height: 1;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 0.5rem 1rem; flex-wrap: wrap; gap: 0.5rem; }
+    nav .nav-links { gap: 0.6rem; font-size: 0.72rem; }
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 0.5rem 1rem; position: relative; }
+    .nav-toggle { display: block; }
+    nav .nav-links {
+      display: none; flex-direction: column; position: absolute;
+      top: 100%; left: 0; right: 0; background: var(--bridge-green-dark);
+      padding: 1rem 1.5rem; gap: 0.8rem; font-size: 0.85rem;
+      border-top: 1px solid rgba(212,168,67,0.2);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3); z-index: 999;
+    }
+    nav .nav-links.open { display: flex; }
+    nav .nav-links a { padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .counters { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
+    .counter-card .number { font-size: 1.6rem; }
+    .counter-card .label { font-size: 0.65rem; }
+    section { padding: 3rem 1.2rem; }
+    .section-header h2 { font-size: 1.6rem; }
+    .timeline { padding-left: 2.2rem; }
+    .timeline::before { left: 8px; }
+    .timeline-item::before { left: -1.85rem; }
+    .blame-grid { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 2.2rem; }
+    .hero .subtitle { font-size: 1.5rem; }
+    .hero .description { font-size: 0.9rem; padding: 0 1rem; }
+  }
+
+  @media (max-width: 480px) {
+    .counters { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 1.7rem; }
+    .hero .subtitle { font-size: 1.2rem; }
+    .hero .description { font-size: 0.82rem; }
+    .counter-card .number { font-size: 1.4rem; }
+    .section-header h2 { font-size: 1.3rem; }
+    .section-header p { font-size: 0.82rem; }
+    .absurdity-card h3 { font-size: 0.95rem; }
+    .absurd-stat { font-size: 1.1rem; }
+    .timeline-item h3 { font-size: 1rem; }
+  }
+
+  /* ── ANIMATIONS ── */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s, transform 0.6s;
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* pulse for the main timer */
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+  .pulse { animation: pulse 2s infinite; }
+
+  /* Offset scroll targets so they land below the fixed nav */
+  [id] {
+    scroll-margin-top: 120px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════ NAV ══════ -->
+<nav>
+  <a href="#" class="logo" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;"><svg class="logo-svg" viewBox="0 0 64 28" width="52" height="23" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; margin-right: 6px;">
+    <!-- Left tower -->
+    <rect x="8" y="8" width="7" height="15" stroke="currentColor" stroke-width="1.1" fill="none"/>
+    <path d="M8,8 L11.5,3 L15,8" stroke="currentColor" stroke-width="1.1" fill="none" stroke-linejoin="round"/>
+    <line x1="11.5" y1="1" x2="11.5" y2="3" stroke="currentColor" stroke-width="0.8"/>
+    <path d="M9.5,17 Q11.5,13.5 13.5,17" stroke="currentColor" stroke-width="0.6" fill="none"/>
+    <!-- Right tower -->
+    <rect x="49" y="8" width="7" height="15" stroke="currentColor" stroke-width="1.1" fill="none"/>
+    <path d="M49,8 L52.5,3 L56,8" stroke="currentColor" stroke-width="1.1" fill="none" stroke-linejoin="round"/>
+    <line x1="52.5" y1="1" x2="52.5" y2="3" stroke="currentColor" stroke-width="0.8"/>
+    <path d="M50.5,17 Q52.5,13.5 54.5,17" stroke="currentColor" stroke-width="0.6" fill="none"/>
+    <!-- Chain -->
+    <path d="M11.5,5 C22,17 42,17 52.5,5" stroke="currentColor" stroke-width="1.2" fill="none"/>
+    <!-- Hangers -->
+    <line x1="19" y1="10.5" x2="19" y2="23" stroke="currentColor" stroke-width="0.4" opacity="0.5"/>
+    <line x1="25" y1="13" x2="25" y2="23" stroke="currentColor" stroke-width="0.4" opacity="0.5"/>
+    <line x1="39" y1="13" x2="39" y2="23" stroke="currentColor" stroke-width="0.4" opacity="0.5"/>
+    <line x1="45" y1="10.5" x2="45" y2="23" stroke="currentColor" stroke-width="0.4" opacity="0.5"/>
+    <!-- BROKEN DECK -->
+    <line x1="3" y1="23" x2="28" y2="23" stroke="currentColor" stroke-width="1.5"/>
+    <line x1="36" y1="23" x2="61" y2="23" stroke="currentColor" stroke-width="1.5"/>
+    <!-- Crack -->
+    <path d="M28,21 L29.5,23 L28,25" stroke="#C0392B" stroke-width="1" fill="none"/>
+    <path d="M36,21 L34.5,23 L36,25" stroke="#C0392B" stroke-width="1" fill="none"/>
+    <line x1="30.5" y1="21.5" x2="33.5" y2="24.5" stroke="#C0392B" stroke-width="0.8" opacity="0.7"/>
+    <line x1="33.5" y1="21.5" x2="30.5" y2="24.5" stroke="#C0392B" stroke-width="0.8" opacity="0.7"/>
+  </svg>Fix Hammersmith Bridge</a>
+  <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">&#9776;</button>
+  <div class="nav-links">
+    <a href="#counters">The Numbers</a>
+    <a href="#absurdity">The Absurdity</a>
+    <a href="#timeline">Timeline</a>
+    <a href="#money">The Money</a>
+    <a href="#other-bridges">Other Bridges</a>
+    <a href="#blame">Who's Blocking</a>
+    <a href="#whatif">What If?</a>
+    <a href="#context">For Context</a>
+  </div>
+</nav>
+
+<!-- ══════ LATEST UPDATE BANNER ══════ -->
+<a href="#latest-update" class="latest-update-banner" id="latest-banner">
+  <span class="update-pulse"></span>
+  <span class="update-label">LATEST UPDATE</span>
+  <span class="update-date">Feb 2026</span>
+  <span class="update-text">— DfT reconvenes taskforce, says bridge is "good candidate" for Structures Fund</span>
+  <span class="update-arrow">&rarr;</span>
+</a>
+
+<!-- ══════ HERO ══════ -->
+<section class="hero" id="top">
+  <div class="bridge-icon"><svg viewBox="0 0 140 60" width="220" height="90" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Left tower -->
+    <rect x="16" y="16" width="14" height="30" stroke="rgba(212,168,67,0.8)" stroke-width="1.5" fill="none"/>
+    <path d="M16,16 L23,6 L30,16" stroke="rgba(212,168,67,0.85)" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+    <line x1="23" y1="2" x2="23" y2="6" stroke="rgba(212,168,67,0.7)" stroke-width="1"/>
+    <path d="M18,33 Q23,27 28,33" stroke="rgba(212,168,67,0.5)" stroke-width="1" fill="none"/>
+    <!-- Right tower -->
+    <rect x="110" y="16" width="14" height="30" stroke="rgba(212,168,67,0.8)" stroke-width="1.5" fill="none"/>
+    <path d="M110,16 L117,6 L124,16" stroke="rgba(212,168,67,0.85)" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+    <line x1="117" y1="2" x2="117" y2="6" stroke="rgba(212,168,67,0.7)" stroke-width="1"/>
+    <path d="M112,33 Q117,27 122,33" stroke="rgba(212,168,67,0.5)" stroke-width="1" fill="none"/>
+    <!-- Chain -->
+    <path d="M23,10 C47,36 93,36 117,10" stroke="rgba(212,168,67,0.9)" stroke-width="1.8" fill="none"/>
+    <!-- Hangers -->
+    <line x1="38" y1="20" x2="38" y2="46" stroke="rgba(255,255,255,0.2)" stroke-width="0.7"/>
+    <line x1="50" y1="26" x2="50" y2="46" stroke="rgba(255,255,255,0.2)" stroke-width="0.7"/>
+    <line x1="90" y1="26" x2="90" y2="46" stroke="rgba(255,255,255,0.2)" stroke-width="0.7"/>
+    <line x1="102" y1="20" x2="102" y2="46" stroke="rgba(255,255,255,0.2)" stroke-width="0.7"/>
+    <!-- BROKEN DECK -->
+    <line x1="5" y1="46" x2="60" y2="46" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
+    <line x1="80" y1="46" x2="135" y2="46" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
+    <!-- Jagged crack -->
+    <path d="M60,42 L63,46 L60,50" stroke="#C0392B" stroke-width="1.5" fill="none" opacity="0.8"/>
+    <path d="M80,42 L77,46 L80,50" stroke="#C0392B" stroke-width="1.5" fill="none" opacity="0.8"/>
+    <line x1="65" y1="43" x2="75" y2="49" stroke="#C0392B" stroke-width="1" opacity="0.5"/>
+    <line x1="75" y1="43" x2="65" y2="49" stroke="#C0392B" stroke-width="1" opacity="0.5"/>
+    <!-- Water -->
+    <path d="M0,57 Q17,54 35,57 Q52,60 70,57 Q87,54 105,57 Q122,60 140,57" stroke="rgba(255,255,255,0.1)" stroke-width="1" fill="none"/>
+  </svg></div>
+  <h1>
+    Hammersmith Bridge
+    <span class="highlight">Still Broken.</span>
+  </h1>
+  <p class="subtitle">
+    Closed to cars since 10 April 2019. A Grade II* listed bridge, designed by Joseph Bazalgette,
+    held hostage by bureaucratic deadlock. Here's what it's costing you.
+  </p>
+
+  <!-- ── LIVE COUNTERS ── -->
+  <div class="counters" id="counters">
+    <div class="counter-card">
+      <div class="number pulse" id="days-closed">—</div>
+      <div class="label">Days closed to cars</div>
+      <div class="source">Since 10 April 2019</div>
+    </div>
+    <div class="counter-card">
+      <div class="number" id="money-spent">—</div>
+      <div class="label">Public money spent</div>
+      <div class="source">£54M+ by Oct 2024, est. ongoing</div>
+    </div>
+    <div class="counter-card">
+      <div class="number" id="cost-estimate">£250M</div>
+      <div class="label">Estimated full repair cost</div>
+      <div class="source">Up from £141M in 2020</div>
+    </div>
+    <div class="counter-card">
+      <div class="number" id="vehicle-hours">—</div>
+      <div class="label">Estimated extra vehicle-hours</div>
+      <div class="source">Putney's A219: London's most congested road (INRIX 2022)</div>
+    </div>
+    <div class="counter-card">
+      <div class="number" id="co2-extra">—</div>
+      <div class="label">Tonnes extra CO₂ emitted</div>
+      <div class="source">From diverted journeys</div>
+    </div>
+    <div class="counter-card">
+      <div class="number" id="decisions-since">0</div>
+      <div class="label">Firm decisions to reopen to cars</div>
+      <div class="source">In almost 7 years</div>
+    </div>
+    <div class="counter-card">
+      <div class="number" id="pms-count">5</div>
+      <div class="label">Prime Ministers during closure</div>
+      <div class="source">May, Johnson, Truss, Sunak, Starmer</div>
+    </div>
+    <div class="counter-card">
+      <div class="number" id="taskforce-meetings">—</div>
+      <div class="label">Government taskforce meetings</div>
+      <div class="source">And counting</div>
+    </div>
+    <div class="counter-card">
+      <div class="number">1,200+</div>
+      <div class="label">Air quality limit breaches in one year</div>
+      <div class="source">Putney High St, 2016 — London's most polluted street</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ ABSURDITY ══════ -->
+<section class="absurdity-section" id="absurdity">
+  <div class="section-inner">
+    <div class="section-header">
+      <h2>The Absurdity, in Numbers</h2>
+      <hr class="section-rule">
+      <p>Some things that have happened in the time it's taken to not fix a bridge</p>
+    </div>
+
+    <div class="absurdity-grid">
+      <div class="absurdity-card fade-in">
+        <span class="absurd-stat">£250,000,000</span>
+        <h3>The Ever-Rising Quote</h3>
+        <p>The repair estimate has nearly doubled from £141M in 2020 to £250M today. At this rate of increase, it'll cost £500M by the time they actually start.</p>
+      </div>
+      <div class="absurdity-card fade-in">
+        <span class="absurd-stat">£54M+ spent</span>
+        <h3>Spent With No Cars Crossing</h3>
+        <p>Over £54 million of public money has been spent — primarily on "stabilisation" — and not a single motor vehicle has crossed the bridge since. That's roughly £22,000 per day spent on a bridge cars can't use.</p>
+      </div>
+      <div class="absurdity-card fade-in">
+        <span class="absurd-stat">#1 Most Congested Road</span>
+        <h3>Putney Pays the Price</h3>
+        <p>In 2022, the INRIX Global Traffic Scorecard ranked the A219 through Putney as London's most congested road — in Europe's most congested city. Drivers lost 47 hours a year on that stretch alone. INRIX explicitly cited the Hammersmith Bridge closure as a contributing factor.</p>
+      </div>
+      <div class="absurdity-card fade-in">
+        <span class="absurd-stat">5 Bus Routes</span>
+        <h3>Diverted Into Oblivion</h3>
+        <p>Routes 33, 72, 209, 419, and 485 have been affected. Thousands of daily commuters have had their journeys extended, some permanently rerouted through already congested corridors.</p>
+      </div>
+      <div class="absurdity-card fade-in">
+        <span class="absurd-stat">"Monument" Proposal</span>
+        <h3>Yes, Really</h3>
+        <p>In January 2025, the Department for Transport genuinely suggested turning the bridge into an inaccessible "monument" — or demolishing it entirely. Both proposals were rejected. The fact they were made at all tells you everything.</p>
+      </div>
+      <div class="absurdity-card fade-in">
+        <span class="absurd-stat">4 Years to Drill Test Holes</span>
+        <h3>The Foster Plan, Killed by Delay</h3>
+        <p>Foster + Partners designed a solution that would have had cars crossing by autumn 2021. It needed pier drilling to confirm feasibility. That drilling was agreed in late 2020, started years later, completed in July 2024 — and then both the DfT and council refused to publish the results.</p>
+      </div>
+      <div class="absurdity-card fade-in">
+        <span class="absurd-stat">3 IRA Bombs Survived</span>
+        <h3>But Not Bureaucracy</h3>
+        <p>Hammersmith Bridge survived IRA bomb attacks in 1939, 1996, and 2000. It turns out the one thing that can destroy a Victorian bridge is a funding dispute between three public bodies.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ TIMELINE ══════ -->
+<section class="timeline-section" id="timeline">
+  <div class="section-inner">
+    <div class="section-header">
+      <h2>The Full Timeline of Inaction</h2>
+      <hr class="section-rule">
+      <p>A decade of warnings, closures, proposals, rejections, and finger-pointing</p>
+    </div>
+
+    <div class="timeline">
+
+      <div class="timeline-item fade-in">
+        <div class="timeline-date">2006 – 2014</div>
+        <h3>Maintenance Budget Slashed</h3>
+        <p>The council's annual bridge maintenance budget was cut from £1 million to £250,000. The money that was spent went on cosmetic works like wood panel refurbishment — not structural integrity.</p>
+        <span class="who-tag tag-council">H&amp;F Council</span>
+      </div>
+
+      <div class="timeline-item fade-in">
+        <div class="timeline-date">2014</div>
+        <h3>First Alarm Bells</h3>
+        <p>A structural report raises serious concerns about the bridge's resilience. The newly elected council commissions the first Comprehensive Structural Integrity Review in the bridge's history — 127 years after it opened.</p>
+        <span class="who-tag tag-engineers">Engineers / Hayder</span>
+      </div>
+
+      <div class="timeline-item fade-in">
+        <div class="timeline-date">November 2016</div>
+        <h3>Funding Wrangle Begins</h3>
+        <p>Repairs and strengthening works are delayed as H&amp;F Council and TfL can't agree who should pay. The bridge continues carrying 20,000 vehicles daily with known structural concerns.</p>
+        <span class="who-tag tag-council">H&amp;F Council</span>
+        <span class="who-tag tag-tfl">TfL</span>
+      </div>
+
+      <div class="timeline-item crisis fade-in">
+        <div class="timeline-date">10 April 2019</div>
+        <h3>Bridge Closed to Motor Vehicles</h3>
+        <p>The bridge is closed indefinitely to all motor traffic due to cracks in the iron pedestals. 20,000 daily vehicle journeys are displaced overnight. Pedestrians and cyclists can still cross. The closure was meant to be temporary.</p>
+        <span class="who-tag tag-council">H&amp;F Council</span>
+      </div>
+
+      <div class="timeline-item fade-in">
+        <div class="timeline-date">August 2019</div>
+        <h3>Mayor Asks for a Meeting</h3>
+        <p>The Mayor of London raises the bridge closure with the Transport Secretary and requests a meeting. The wheels of bureaucracy turn at their customary pace.</p>
+        <span class="who-tag tag-tfl">Mayor / TfL</span>
+      </div>
+
+      <div class="timeline-item progress fade-in">
+        <div class="timeline-date">September 2019</div>
+        <h3>TfL Pledges £25M</h3>
+        <p>Feasibility studies are completed. TfL confirms its contribution of £25 million. This sounds like progress. It isn't — nobody else has confirmed their share.</p>
+        <span class="who-tag tag-tfl">TfL</span>
+      </div>
+
+      <div class="timeline-item crisis fade-in">
+        <div class="timeline-date">13 August 2020</div>
+        <h3>Total Closure — Heatwave Damage</h3>
+        <p>A heatwave causes the structural issues to worsen dramatically. The bridge is now closed to everyone: pedestrians, cyclists, river traffic — even boats can't pass underneath. Full repair estimate: £141M. Stabilisation alone: £46M. Nobody has the money.</p>
+        <span class="who-tag tag-engineers">Engineers</span>
+      </div>
+
+      <div class="timeline-item absurd fade-in">
+        <div class="timeline-date">October 2020</div>
+        <h3>£16.7M Spent on Plans Alone</h3>
+        <p>It's revealed that TfL has spent £16.7 million just on repair planning. Not on repairs — on planning for repairs that haven't happened.</p>
+        <span class="who-tag tag-tfl">TfL</span>
+      </div>
+
+      <div class="timeline-item progress fade-in">
+        <div class="timeline-date">November 2020</div>
+        <h3>Foster + Partners Proposes Bold Solution</h3>
+        <p>After the full closure, Council leader Stephen Cowan reaches out to property tycoon and philanthropist Sir John Ritblat for help. Ritblat approaches Foster + Partners, who team up with specialist bridge engineers COWI. Their proposal: a temporary double-decker steel truss built <em>above</em> the existing deck — a bridge-within-a-bridge. The lower level carries pedestrians and cyclists; the upper level carries cars and buses. The structure wouldn't rest on the historic suspension system, so workers could safely access and even remove damaged elements off-site for repair. Assembled on both banks and slid into place to meet in the middle. Cost: ~£100M — a potential £40M saving over the conventional £141M approach. Pedestrians by summer 2021, cars by autumn 2021, full restoration by 2023. H&amp;F Council immediately backs it. But the council doesn't have £100M — and crucially, it doesn't own the decision alone. TfL and the DfT both need to agree and contribute funding. Neither commits. What follows is a masterclass in how three public bodies can collectively kill a good idea without any one of them formally rejecting it.</p>
+        <span class="who-tag tag-engineers">Foster + Partners / COWI</span>
+        <span class="who-tag tag-council">H&amp;F Council</span>
+      </div>
+
+      <div class="timeline-item absurd fade-in">
+        <div class="timeline-date">December 2020</div>
+        <h3>But First: Can the Piers Take the Weight?</h3>
+        <p>The proposal has one critical dependency: can the bridge's pedestal footings support the additional mass of a double-decker structure? Nobody knows — no risk assessment has been done. Foster/COWI recommend drilling into the piers to test load-bearing capacity, a standard investigative step that should take months. Without this data, no contractor will take on the project. The drilling is agreed in principle at a DfT taskforce meeting. It will not be completed for nearly four years.</p>
+        <span class="who-tag tag-engineers">Foster + Partners / COWI</span>
+        <span class="who-tag tag-govt">DfT Taskforce</span>
+      </div>
+
+      <div class="timeline-item absurd fade-in">
+        <div class="timeline-date">March 2021</div>
+        <h3>Toll Scheme Agreed — Then Stalls</h3>
+        <p>A government taskforce agrees to a plan where a £3 toll would fund the council's share of the Foster scheme. The plan is "accepted." But "accepted" apparently doesn't mean "funded." Nobody signs the cheque. The DfT won't commit money. TfL, financially crippled by the pandemic, can't contribute its pledged £25M. No contractor will take on the Foster scheme's technical risk without the pier drilling data — which everyone agreed to collect but nobody is collecting. The plan dies the most British death imaginable: everyone agrees it's a good idea, and nobody does anything about it.</p>
+        <span class="who-tag tag-govt">Government Taskforce</span>
+        <span class="who-tag tag-tfl">TfL</span>
+      </div>
+
+      <div class="timeline-item progress fade-in">
+        <div class="timeline-date">17 July 2021</div>
+        <h3>Reopens to Pedestrians (But Dismount Your Bike)</h3>
+        <p>After 11 months of total closure, the bridge reopens to pedestrians. Cyclists can cross — but must push their bikes. This "dismount" rule will persist for nearly three years.</p>
+        <span class="who-tag tag-council">H&amp;F Council</span>
+      </div>
+
+      <div class="timeline-item fade-in">
+        <div class="timeline-date">February 2022</div>
+        <h3>Phase 1 Stabilisation Begins</h3>
+        <p>Engineers from Mott MacDonald begin on-site stabilisation work. The goal is to keep the bridge from deteriorating further while the adults in the room figure out who pays for the rest.</p>
+        <span class="who-tag tag-engineers">Mott MacDonald</span>
+      </div>
+
+      <div class="timeline-item absurd fade-in">
+        <div class="timeline-date">December 2022</div>
+        <h3>Business Case Submitted — Then Ignored</h3>
+        <p>H&amp;F Council submits a plan to the Department for Transport for full reopening, including a toll for drivers. The DfT takes no action. A formal resubmission in March 2023 also receives no response.</p>
+        <span class="who-tag tag-govt">Department for Transport</span>
+        <span class="who-tag tag-council">H&amp;F Council</span>
+      </div>
+
+      <div class="timeline-item absurd fade-in">
+        <div class="timeline-date">July 2023</div>
+        <h3>DfT Says Bridge "Not Eligible" for Funding</h3>
+        <p>The Department for Transport confirms that Hammersmith Bridge — a Grade II* listed national monument — is not eligible for many sources of infrastructure funding. You couldn't make it up.</p>
+        <span class="who-tag tag-govt">Department for Transport</span>
+      </div>
+
+      <div class="timeline-item absurd fade-in">
+        <div class="timeline-date">April 2024 — 5th Anniversary</div>
+        <h3>"Could Take Another Five Years"</h3>
+        <p>On the fifth anniversary of closure, the council warns it could take another five years to reopen to vehicles, even if full funding appeared immediately. The cost estimate has risen to £250M. Around £30M has already been spent.</p>
+        <span class="who-tag tag-council">H&amp;F Council</span>
+      </div>
+
+      <div class="timeline-item absurd fade-in">
+        <div class="timeline-date">July 2024</div>
+        <h3>Pier Drilling Finally Completed — 4 Years Late</h3>
+        <p>Remember the "standard investigative step" of drilling into the piers — the one thing standing between the Foster plan and a contractor signing up? It was proposed in late 2020. It is now July 2024. The council finally completes the drilling — <strong>nearly four years</strong> after it was first agreed. Four years. To drill some test holes. In that time, the UK built and opened the Elizabeth Line. By now, the Foster plan's original £100M estimate is long obsolete. The cost of any full restoration has ballooned to £250M. The window where the plan could have had cars crossing by autumn 2021 is a distant memory.</p>
+        <span class="who-tag tag-council">H&amp;F Council</span>
+      </div>
+
+      <div class="timeline-item crisis fade-in">
+        <div class="timeline-date">Late 2024</div>
+        <h3>FOI Requests Refused — Results Kept Secret</h3>
+        <p>After the pier drilling is completed, both the DfT and H&amp;F Council refuse Freedom of Information requests to disclose the results. The public — who funded the drilling — are not allowed to know whether the Foster plan is structurally feasible. The data that could have unlocked progress sits behind a bureaucratic wall. The plan that would have had cars crossing by autumn 2021 is effectively buried, not by engineering failure, but by administrative suffocation.</p>
+        <span class="who-tag tag-govt">DfT</span>
+        <span class="who-tag tag-council">H&amp;F Council</span>
+      </div>
+
+      <div class="timeline-item absurd fade-in">
+        <div class="timeline-date">January 2025</div>
+        <h3>Government Suggests Demolishing It</h3>
+        <p>At the reconvened Hammersmith Bridge Taskforce, the DfT floats two extraordinary ideas: turn the bridge into an inaccessible "monument," or demolish it and build a new crossing. Both are rejected. Cars being banned permanently is also discussed as a cost-saving measure.</p>
+        <span class="who-tag tag-govt">Department for Transport</span>
+      </div>
+
+      <div class="timeline-item progress fade-in">
+        <div class="timeline-date">April 2025</div>
+        <h3>New Cycle &amp; Pedestrian Lanes Open</h3>
+        <p>The main carriageway is resurfaced and reopened with dedicated cycling and pedestrian lanes — a £2.9M project. A genuine improvement for non-motorised users. Cars? Still banned.</p>
+        <span class="who-tag tag-council">H&amp;F Council</span>
+      </div>
+
+      <div class="timeline-item fade-in">
+        <div class="timeline-date">June 2025</div>
+        <h3>Government Announces "Structures Fund"</h3>
+        <p>Ministers announce a new pot of money — the Structures Fund — set aside to support "repairing run down bridges, decaying flyovers and worn out tunnels across Britain." It sounds promising. But there is no specific commitment to Hammersmith Bridge yet.</p>
+        <span class="who-tag tag-govt">Department for Transport</span>
+      </div>
+
+      <div class="timeline-item latest fade-in" id="latest-update">
+        <div class="timeline-date">February 2026 <span class="latest-tag">LATEST</span></div>
+        <h3>A Glimmer? Taskforce Reconvened, Fund Earmarked</h3>
+        <p>Roads Minister Simon Lightwood announces the DfT will reconvene the Hammersmith Bridge Taskforce — and specifically identifies the bridge as "a good candidate for investment" from the Structures Fund. He states the government intends to "consider the viability of future funding for the next stage of works through this route." Note the language: <em>consider the viability of future funding.</em> Not "fund." Not "commit." Consider. The viability. Of future funding. As the bridge approaches its 7th anniversary of closure to cars on 10 April 2026.</p>
+        <p style="margin-top: 0.8rem; padding-top: 0.8rem; border-top: 1px solid rgba(212,168,67,0.2);"><strong>Where things stand:</strong> £54M+ of public money spent. £20.2M owed to the council by DfT and TfL. Repair estimate: £250M. No reopening date for motor vehicles. The saga enters its eighth year.</p>
+        <span class="who-tag tag-govt">Roads Minister / DfT</span>
+        <span class="who-tag tag-tfl">TfL</span>
+        <span class="who-tag tag-council">H&amp;F Council</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════ SHOW ME THE MONEY ══════ -->
+<section class="money-section" id="money" style="background: var(--cream); padding: 5rem 2rem;">
+  <div class="section-inner">
+    <div class="section-header">
+      <h2>Show Me the Money</h2>
+      <hr class="section-rule">
+      <p>What was pledged vs. what was actually paid — and who left the council holding the bill</p>
+    </div>
+
+    <!-- The agreement -->
+    <div style="text-align: center; margin-bottom: 2.5rem; padding: 1.2rem; background: rgba(212,168,67,0.08); border: 1px solid rgba(212,168,67,0.2); border-radius: 8px;">
+      <p style="font-size: 0.9rem; color: #666; margin: 0;">In 2021, a cost-sharing agreement was reached: each of the three parties — H&amp;F Council, TfL, and the DfT — would cover <strong>one third</strong> of the costs. Here's what actually happened.</p>
+    </div>
+
+    <!-- Three donut charts -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
+
+      <!-- H&F Council -->
+      <div style="text-align: center; background: #fff; border-radius: 12px; padding: 2rem 1.5rem; box-shadow: 0 2px 12px rgba(0,0,0,0.06);">
+        <h3 style="font-size: 1rem; color: var(--bridge-green-dark); margin-bottom: 0.3rem;">H&amp;F Council</h3>
+        <p style="font-size: 0.78rem; color: #999; margin-bottom: 1rem;">Bridge owner</p>
+        <svg viewBox="0 0 120 120" width="150" height="150" style="display: block; margin: 0 auto;">
+          <!-- Background ring -->
+          <circle cx="60" cy="60" r="50" fill="none" stroke="#f0f0f0" stroke-width="14"/>
+          <!-- Pledged (1/3 = 33%) — shown as full ring outline -->
+          <circle cx="60" cy="60" r="50" fill="none" stroke="#e0e0e0" stroke-width="14"
+            stroke-dasharray="105 209" stroke-dashoffset="79" stroke-linecap="round" opacity="0.4"/>
+          <!-- Actually paid (~£43M of £54M total = 80% of all spend) -->
+          <circle cx="60" cy="60" r="50" fill="none" stroke="#1ABC9C" stroke-width="14"
+            stroke-dasharray="251 63" stroke-dashoffset="79" stroke-linecap="round"/>
+          <!-- Centre text -->
+          <text x="60" y="53" text-anchor="middle" font-family="Georgia, serif" font-size="16" font-weight="bold" fill="#1A3D27">£43M+</text>
+          <text x="60" y="68" text-anchor="middle" font-family="Georgia, serif" font-size="9" fill="#999">of £54M total</text>
+          <text x="60" y="80" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="7.5" font-weight="bold" fill="#1ABC9C">80% OF ALL SPEND</text>
+        </svg>
+        <div style="margin-top: 1rem;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.82rem; margin-bottom: 0.3rem;">
+            <span style="color: #999;">Agreed share (⅓)</span>
+            <span style="font-weight: 700; color: var(--iron-grey);">~£83M</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.82rem; margin-bottom: 0.3rem;">
+            <span style="color: #999;">Actually spent</span>
+            <span style="font-weight: 700; color: #1ABC9C;">~£43M</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.82rem;">
+            <span style="color: #999;">Verdict</span>
+            <span style="font-weight: 700; color: var(--alert-orange);">Overpaying</span>
+          </div>
+        </div>
+        <p style="font-size: 0.78rem; color: #888; margin-top: 0.8rem; font-style: italic;">Spent £43M+ and is owed £20.2M by the other two. Advanced funds without government approval, hoping to be reimbursed.</p>
+      </div>
+
+      <!-- DfT -->
+      <div style="text-align: center; background: #fff; border-radius: 12px; padding: 2rem 1.5rem; box-shadow: 0 2px 12px rgba(0,0,0,0.06);">
+        <h3 style="font-size: 1rem; color: var(--bridge-green-dark); margin-bottom: 0.3rem;">Department for Transport</h3>
+        <p style="font-size: 0.78rem; color: #999; margin-bottom: 1rem;">Central government</p>
+        <svg viewBox="0 0 120 120" width="150" height="150" style="display: block; margin: 0 auto;">
+          <circle cx="60" cy="60" r="50" fill="none" stroke="#f0f0f0" stroke-width="14"/>
+          <!-- Pledged share outline (⅓) -->
+          <circle cx="60" cy="60" r="50" fill="none" stroke="#e0e0e0" stroke-width="14"
+            stroke-dasharray="105 209" stroke-dashoffset="79" stroke-linecap="round" opacity="0.4"/>
+          <!-- Actually paid: £8.3M of £54M = ~15% -->
+          <circle cx="60" cy="60" r="50" fill="none" stroke="#8E44AD" stroke-width="14"
+            stroke-dasharray="48 266" stroke-dashoffset="79" stroke-linecap="round"/>
+          <text x="60" y="53" text-anchor="middle" font-family="Georgia, serif" font-size="16" font-weight="bold" fill="#1A3D27">£8.3M</text>
+          <text x="60" y="68" text-anchor="middle" font-family="Georgia, serif" font-size="9" fill="#999">of £54M total</text>
+          <text x="60" y="80" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="7.5" font-weight="bold" fill="#C0392B">15% OF ALL SPEND</text>
+        </svg>
+        <div style="margin-top: 1rem;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.82rem; margin-bottom: 0.3rem;">
+            <span style="color: #999;">Agreed share (⅓)</span>
+            <span style="font-weight: 700; color: var(--iron-grey);">~£83M</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.82rem; margin-bottom: 0.3rem;">
+            <span style="color: #999;">Actually paid</span>
+            <span style="font-weight: 700; color: #8E44AD;">£8.3M</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.82rem;">
+            <span style="color: #999;">Verdict</span>
+            <span style="font-weight: 700; color: var(--alert-red);">Underpaying massively</span>
+          </div>
+        </div>
+        <p style="font-size: 0.78rem; color: #888; margin-top: 0.8rem; font-style: italic;">Contributed just 15% of spend while agreeing to cover a third. Declared the bridge "not eligible" for infrastructure funding. Suggested demolishing it.</p>
+      </div>
+
+      <!-- TfL -->
+      <div style="text-align: center; background: #fff; border-radius: 12px; padding: 2rem 1.5rem; box-shadow: 0 2px 12px rgba(0,0,0,0.06);">
+        <h3 style="font-size: 1rem; color: var(--bridge-green-dark); margin-bottom: 0.3rem;">Transport for London</h3>
+        <p style="font-size: 0.78rem; color: #999; margin-bottom: 1rem;">London's transport authority</p>
+        <svg viewBox="0 0 120 120" width="150" height="150" style="display: block; margin: 0 auto;">
+          <circle cx="60" cy="60" r="50" fill="none" stroke="#f0f0f0" stroke-width="14"/>
+          <!-- Pledged share outline (⅓) -->
+          <circle cx="60" cy="60" r="50" fill="none" stroke="#e0e0e0" stroke-width="14"
+            stroke-dasharray="105 209" stroke-dashoffset="79" stroke-linecap="round" opacity="0.4"/>
+          <!-- Actually paid: £2.9M of £54M = ~5% -->
+          <circle cx="60" cy="60" r="50" fill="none" stroke="#2980B9" stroke-width="14"
+            stroke-dasharray="17 297" stroke-dashoffset="79" stroke-linecap="round"/>
+          <text x="60" y="53" text-anchor="middle" font-family="Georgia, serif" font-size="16" font-weight="bold" fill="#1A3D27">£2.9M</text>
+          <text x="60" y="68" text-anchor="middle" font-family="Georgia, serif" font-size="9" fill="#999">of £54M total</text>
+          <text x="60" y="80" text-anchor="middle" font-family="-apple-system, sans-serif" font-size="7.5" font-weight="bold" fill="#C0392B">5% OF ALL SPEND</text>
+        </svg>
+        <div style="margin-top: 1rem;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.82rem; margin-bottom: 0.3rem;">
+            <span style="color: #999;">Pledged in 2019</span>
+            <span style="font-weight: 700; color: var(--iron-grey);">£25M</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.82rem; margin-bottom: 0.3rem;">
+            <span style="color: #999;">Actually paid</span>
+            <span style="font-weight: 700; color: #2980B9;">£2.9M</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.82rem;">
+            <span style="color: #999;">Verdict</span>
+            <span style="font-weight: 700; color: var(--alert-red);">88% short of pledge</span>
+          </div>
+        </div>
+        <p style="font-size: 0.78rem; color: #888; margin-top: 0.8rem; font-style: italic;">Pledged £25M in 2019. Delivered £2.9M. Separately spent £16.7M on "planning" that led nowhere. Dropped Hammersmith Bridge from its 2024 Business Plan entirely.</p>
+      </div>
+
+    </div>
+
+    <!-- The punchline -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+
+      <div class="absurdity-card fade-in" style="border-left-color: var(--alert-red);">
+        <span class="absurd-stat">£16.7M on "Planning"</span>
+        <h3>TfL's Invisible Spending</h3>
+        <p>On top of the £2.9M contributed to actual work, TfL spent £16.7M on assessments, feasibility studies, inspectors, surveys and designs. That's £16.7 million on plans for repairs that never happened. For context, £16.7M is enough to build a new primary school.</p>
+      </div>
+
+      <div class="absurdity-card fade-in" style="border-left-color: var(--alert-red);">
+        <span class="absurd-stat">£20.2M Owed</span>
+        <h3>The Council's Unpaid Bill</h3>
+        <p>H&amp;F Council says it is owed £20.2M by the DfT and TfL — money the council advanced in good faith, often without government approval, because somebody had to keep the bridge from collapsing while the adults argued about whose chequebook to use.</p>
+      </div>
+
+      <div class="absurdity-card fade-in" style="border-left-color: var(--alert-red);">
+        <span class="absurd-stat">£0 from TfL's 2024 Plan</span>
+        <h3>Dropped Entirely</h3>
+        <p>Despite pledging £25M in 2019, TfL's 2024 Business Plan did not include any funding for Hammersmith Bridge. Not reduced funding. Not deferred funding. No funding at all. The bridge was simply dropped from the plan as though it doesn't exist.</p>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════ EVERY OTHER BRIDGE ══════ -->
+<section id="other-bridges" style="background: #1A3D27; padding: 5rem 2rem;">
+  <div class="section-inner">
+    <div class="section-header" style="color: #fff;">
+      <h2 style="color: #fff;">Every Other Bridge Gets Funded</h2>
+      <hr class="section-rule" style="border-color: rgba(212,168,67,0.4);">
+      <p style="color: rgba(255,255,255,0.7);">The DfT routinely funds 80–85% of major bridge projects across the UK. For Hammersmith Bridge? Just 15%.</p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem;">
+
+      <div class="fade-in" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1.8rem; position: relative; overflow: hidden;">
+        <div style="position: absolute; top: 12px; right: 14px; background: #1ABC9C; color: #fff; font-size: 0.7rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.5px;">FUNDED</div>
+        <h3 style="color: #D4A843; font-size: 1.05rem; margin-bottom: 0.3rem;">Tyne Bridge</h3>
+        <p style="color: rgba(255,255,255,0.5); font-size: 0.78rem; margin-bottom: 0.8rem;">Newcastle &bull; Grade II* Listed</p>
+        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem;">
+          <span style="color: rgba(255,255,255,0.7); font-size: 0.85rem;">DfT contribution</span>
+          <span style="color: #1ABC9C; font-size: 1.3rem; font-weight: 700;">85%</span>
+        </div>
+        <div style="background: rgba(255,255,255,0.1); border-radius: 6px; height: 8px; overflow: hidden; margin-bottom: 0.8rem;">
+          <div style="background: #1ABC9C; width: 85%; height: 100%; border-radius: 6px;"></div>
+        </div>
+        <p style="color: rgba(255,255,255,0.6); font-size: 0.8rem; margin: 0;">£35.2M of £41.4M total. Also Grade II* listed — same heritage protection as Hammersmith. Work started 2024. The DfT didn't suggest demolishing it.</p>
+      </div>
+
+      <div class="fade-in" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1.8rem; position: relative; overflow: hidden;">
+        <div style="position: absolute; top: 12px; right: 14px; background: #1ABC9C; color: #fff; font-size: 0.7rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.5px;">FUNDED</div>
+        <h3 style="color: #D4A843; font-size: 1.05rem; margin-bottom: 0.3rem;">Great Yarmouth Third River Crossing</h3>
+        <p style="color: rgba(255,255,255,0.5); font-size: 0.78rem; margin-bottom: 0.8rem;">Norfolk &bull; New build</p>
+        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem;">
+          <span style="color: rgba(255,255,255,0.7); font-size: 0.85rem;">DfT contribution</span>
+          <span style="color: #1ABC9C; font-size: 1.3rem; font-weight: 700;">82%</span>
+        </div>
+        <div style="background: rgba(255,255,255,0.1); border-radius: 6px; height: 8px; overflow: hidden; margin-bottom: 0.8rem;">
+          <div style="background: #1ABC9C; width: 82%; height: 100%; border-radius: 6px;"></div>
+        </div>
+        <p style="color: rgba(255,255,255,0.6); font-size: 0.8rem; margin: 0;">£98M of £121M total. A brand-new lifting bridge for a town of 100,000 people. The DfT paid for most of it. Opened February 2024.</p>
+      </div>
+
+      <div class="fade-in" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1.8rem; position: relative; overflow: hidden;">
+        <div style="position: absolute; top: 12px; right: 14px; background: #1ABC9C; color: #fff; font-size: 0.7rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.5px;">FUNDED</div>
+        <h3 style="color: #D4A843; font-size: 1.05rem; margin-bottom: 0.3rem;">Queensferry Crossing</h3>
+        <p style="color: rgba(255,255,255,0.5); font-size: 0.78rem; margin-bottom: 0.8rem;">Edinburgh &bull; New build</p>
+        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem;">
+          <span style="color: rgba(255,255,255,0.7); font-size: 0.85rem;">Government contribution</span>
+          <span style="color: #1ABC9C; font-size: 1.3rem; font-weight: 700;">100%</span>
+        </div>
+        <div style="background: rgba(255,255,255,0.1); border-radius: 6px; height: 8px; overflow: hidden; margin-bottom: 0.8rem;">
+          <div style="background: #1ABC9C; width: 100%; height: 100%; border-radius: 6px;"></div>
+        </div>
+        <p style="color: rgba(255,255,255,0.6); font-size: 0.8rem; margin: 0;">£1.35 billion. Fully government funded. The world's longest three-tower cable-stayed bridge. Built and opened in just 6 years. No arguments about "eligibility."</p>
+      </div>
+
+      <div class="fade-in" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1.8rem; position: relative; overflow: hidden;">
+        <div style="position: absolute; top: 12px; right: 14px; background: #1ABC9C; color: #fff; font-size: 0.7rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.5px;">FUNDED</div>
+        <h3 style="color: #D4A843; font-size: 1.05rem; margin-bottom: 0.3rem;">Lower Thames Crossing</h3>
+        <p style="color: rgba(255,255,255,0.5); font-size: 0.78rem; margin-bottom: 0.8rem;">Kent/Essex &bull; New tunnel</p>
+        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem;">
+          <span style="color: rgba(255,255,255,0.7); font-size: 0.85rem;">DfT commitment</span>
+          <span style="color: #1ABC9C; font-size: 1.3rem; font-weight: 700;">£3.1B+</span>
+        </div>
+        <div style="background: rgba(255,255,255,0.1); border-radius: 6px; height: 8px; overflow: hidden; margin-bottom: 0.8rem;">
+          <div style="background: #1ABC9C; width: 28%; height: 100%; border-radius: 6px;"></div>
+        </div>
+        <p style="color: rgba(255,255,255,0.6); font-size: 0.8rem; margin: 0;">£11 billion total project. The DfT has already committed £3.1B in public funds, with £1.2B already spent — and construction hasn't even started yet.</p>
+      </div>
+
+      <div class="fade-in" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1.8rem; position: relative; overflow: hidden;">
+        <div style="position: absolute; top: 12px; right: 14px; background: #1ABC9C; color: #fff; font-size: 0.7rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.5px;">FUNDED</div>
+        <h3 style="color: #D4A843; font-size: 1.05rem; margin-bottom: 0.3rem;">Silvertown Tunnel</h3>
+        <p style="color: rgba(255,255,255,0.5); font-size: 0.78rem; margin-bottom: 0.8rem;">East London &bull; TfL project</p>
+        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem;">
+          <span style="color: rgba(255,255,255,0.7); font-size: 0.85rem;">TfL commitment</span>
+          <span style="color: #1ABC9C; font-size: 1.3rem; font-weight: 700;">£2.2B</span>
+        </div>
+        <div style="background: rgba(255,255,255,0.1); border-radius: 6px; height: 8px; overflow: hidden; margin-bottom: 0.8rem;">
+          <div style="background: #1ABC9C; width: 100%; height: 100%; border-radius: 6px;"></div>
+        </div>
+        <p style="color: rgba(255,255,255,0.6); font-size: 0.8rem; margin: 0;">TfL committed £2.2B for a new tunnel in east London — £100M/year for 25 years. But can't find £25M for Hammersmith Bridge? Opened April 2025.</p>
+      </div>
+
+      <!-- Hammersmith Bridge — the outlier -->
+      <div class="fade-in" style="background: rgba(192,57,43,0.15); border: 2px solid rgba(192,57,43,0.4); border-radius: 12px; padding: 1.8rem; position: relative; overflow: hidden;">
+        <div style="position: absolute; top: 12px; right: 14px; background: #C0392B; color: #fff; font-size: 0.7rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.5px;">ABANDONED</div>
+        <h3 style="color: #C0392B; font-size: 1.05rem; margin-bottom: 0.3rem;">Hammersmith Bridge</h3>
+        <p style="color: rgba(255,255,255,0.5); font-size: 0.78rem; margin-bottom: 0.8rem;">West London &bull; Grade II* Listed</p>
+        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem;">
+          <span style="color: rgba(255,255,255,0.7); font-size: 0.85rem;">DfT + TfL combined</span>
+          <span style="color: #C0392B; font-size: 1.3rem; font-weight: 700;">20%</span>
+        </div>
+        <div style="background: rgba(255,255,255,0.1); border-radius: 6px; height: 8px; overflow: hidden; margin-bottom: 0.8rem;">
+          <div style="background: #C0392B; width: 20%; height: 100%; border-radius: 6px;"></div>
+        </div>
+        <p style="color: rgba(255,255,255,0.6); font-size: 0.8rem; margin: 0;">£11.2M of £54M spent so far (DfT £8.3M + TfL £2.9M). Declared "not eligible" for infrastructure funding. DfT suggested demolishing it. Closed for nearly 7 years. 250,000+ residents affected.</p>
+      </div>
+
+    </div>
+
+    <!-- The kicker -->
+    <div class="fade-in" style="text-align: center; background: rgba(192,57,43,0.1); border: 1px solid rgba(192,57,43,0.3); border-radius: 12px; padding: 2rem; max-width: 700px; margin: 0 auto;">
+      <p style="color: #D4A843; font-size: 1.4rem; font-weight: 700; font-family: Georgia, serif; margin-bottom: 0.8rem;">The DfT funds 85% of the Tyne Bridge — also Grade II* listed.<br>It funds 82% of Great Yarmouth's new crossing.<br>It committed £3.1 billion to the Lower Thames Crossing.</p>
+      <p style="color: #C0392B; font-size: 1.6rem; font-weight: 700; font-family: Georgia, serif; margin-bottom: 0.5rem;">For Hammersmith Bridge, it has paid just 15%<br>and declared it "not eligible."</p>
+      <p style="color: rgba(255,255,255,0.5); font-size: 0.85rem; margin: 0;">Hammersmith Bridge "falls between the stools" of funding categories, according to the DfT. It's not on the Major Road Network (owned by the council, not TfL) and not eligible for Large Local Majors funding either. A bridge that serves 250,000+ people apparently doesn't fit in any box.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════ BLAME TRACKER ══════ -->
+<section class="blame-section" id="blame">
+  <div class="section-inner">
+    <div class="section-header">
+      <h2>Who Is Blocking What?</h2>
+      <hr class="section-rule">
+      <p>Three public bodies, one bridge, zero accountability</p>
+    </div>
+
+    <div class="blame-grid">
+      <div class="blame-card fade-in">
+        <h3>Hammersmith &amp; Fulham Council</h3>
+        <div class="blame-role">Bridge owner &amp; maintainer</div>
+        <div class="blame-detail">
+          Cut maintenance budget from £1M to £250K (2006–14), which contributed to the bridge's deterioration. But since 2020, has spent £43M+ — 80% of all money spent on the bridge — while the other two parties dragged their feet. Backed the Foster + Partners plan. The council isn't blameless, but it's the only body that has actually put its money where its mouth is.
+        </div>
+      </div>
+
+      <div class="blame-card fade-in" style="border: 2px solid rgba(192,57,43,0.3); background: rgba(192,57,43,0.03);">
+        <h3 style="color: #C0392B;">Department for Transport &#9888;</h3>
+        <div class="blame-role">Central government — should be funding this</div>
+        <div class="blame-detail">
+          The DfT routinely funds 80–85% of bridge projects across the UK. It paid 85% of the Tyne Bridge restoration (also Grade II* listed). It paid 82% of the Great Yarmouth crossing. It committed £3.1 billion to the Lower Thames Crossing before construction has even started. Yet for Hammersmith Bridge, it has contributed just £8.3M — 15% of spend — and declared the bridge "not eligible" for infrastructure funding. When pressed, it suggested demolishing a Grade II* national monument or turning it into a "landmark" that nobody can cross. This is a total failure of the DfT's obligation to fund national infrastructure.
+        </div>
+      </div>
+
+      <div class="blame-card fade-in" style="border: 2px solid rgba(192,57,43,0.3); background: rgba(192,57,43,0.03);">
+        <h3 style="color: #C0392B;">Transport for London &#9888;</h3>
+        <div class="blame-role">London's transport authority — pledged £25M, delivered £2.9M</div>
+        <div class="blame-detail">
+          Pledged £25M in 2019 and has delivered just £2.9M — 88% short of its own promise. Separately burnt £16.7M on planning that led nowhere. Meanwhile, TfL committed £2.2 billion to the Silvertown Tunnel in east London — paying £100M per year for 25 years. It found £2.2B for a new tunnel, but can't honour a £25M pledge to repair an existing bridge serving a quarter of a million people? TfL then dropped Hammersmith Bridge from its 2024 Business Plan entirely. Not reduced. Not deferred. Deleted. As if the bridge doesn't exist.
+        </div>
+      </div>
+
+      <div class="blame-card fade-in">
+        <h3>Historic England / Listed Status</h3>
+        <div class="blame-role">Heritage protection</div>
+        <div class="blame-detail">
+          The Grade II* listing adds complexity and cost to every proposed repair. But the Tyne Bridge is also Grade II* listed and is being restored with 85% government funding. Heritage status is a challenge, not an excuse — it hasn't stopped any other bridge project in the country.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ WHAT IF ══════ -->
+<section class="whatif-section" id="whatif">
+  <div class="section-inner">
+    <div class="section-header">
+      <h2>What If We Applied This Logic Elsewhere?</h2>
+      <hr class="section-rule">
+      <p>Imagine if other London bridges got the Hammersmith treatment</p>
+    </div>
+
+    <div class="whatif-cards">
+      <div class="whatif-card fade-in">
+        <h3>Putney Bridge Closes Next</h3>
+        <p>Putney already absorbs much of the displaced traffic. If it closed, that's another 37,000 daily vehicle trips diverted. Wandsworth and Battersea Bridge would collapse under the load. South-west London would functionally disconnect from the north.</p>
+      </div>
+      <div class="whatif-card fade-in">
+        <h3>Chiswick Bridge Goes Down</h3>
+        <p>The A316 corridor — already strained — loses its last easy crossing west of Putney. Kew Bridge becomes the only option. Richmond, Mortlake, and Chiswick grind to a standstill. The M4 becomes the de facto river crossing.</p>
+      </div>
+      <div class="whatif-card fade-in">
+        <h3>The "Monument" Approach for Tower Bridge</h3>
+        <p>Using the DfT's own logic: Tower Bridge is even older and more historically significant. Should we close it to traffic and make it an "inaccessible monument" too? Of course not. The idea is absurd — which is exactly the point.</p>
+      </div>
+      <div class="whatif-card fade-in">
+        <h3>The NHS Analogy</h3>
+        <p>Imagine a hospital closing its A&amp;E department in 2019 due to cracked walls, and in 2026 the government is still debating whether to fix it, demolish it, or turn it into a museum. That's where we are with Hammersmith Bridge.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ FOR CONTEXT ══════ -->
+<section class="context-section" id="context" style="background: var(--cream); padding: 5rem 2rem;">
+  <div class="section-inner">
+    <div class="section-header">
+      <h2>For Context</h2>
+      <hr class="section-rule">
+      <p>Things that have been started and finished in the time it's taken to not fix one bridge</p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+
+      <div class="absurdity-card fade-in" style="border-left-color: var(--thames-light);">
+        <span class="absurd-stat">The Elizabeth Line</span>
+        <h3>42km of New Tunnels Under London</h3>
+        <p>Crossrail broke ground in 2009 and opened in 2022 — delivering 42km of new railway, 10 new stations, and capacity for 200 million passengers a year. It was considered scandalously late. Hammersmith Bridge has been closed longer than it took to build and open the Elizabeth Line.</p>
+      </div>
+
+      <div class="absurdity-card fade-in" style="border-left-color: var(--thames-light);">
+        <span class="absurd-stat">Wembley Stadium</span>
+        <h3>90,000 Seats in 4.5 Years</h3>
+        <p>The old Wembley was demolished and an entirely new 90,000-seat national stadium was designed, built and opened between 2002 and 2007. In the time Hammersmith Bridge has been closed to cars, you could have rebuilt Wembley one and a half times.</p>
+      </div>
+
+      <div class="absurdity-card fade-in" style="border-left-color: var(--thames-light);">
+        <span class="absurd-stat">2–3 Hospitals</span>
+        <h3>What £250M Could Build Instead</h3>
+        <p>The government's New Hospital Programme averages ~£93M per hospital. The £250M repair estimate for Hammersmith Bridge could build two to three entire new hospitals. The £54M already spent on stabilisation alone could have built a new mental health facility.</p>
+      </div>
+
+      <div class="absurdity-card fade-in" style="border-left-color: var(--alert-red);">
+        <span class="absurd-stat">£40M → £250M</span>
+        <h3>The Cost of Delay Is Delay</h3>
+        <p>When the bridge first closed in 2019, the repair estimate was £40M. By 2020 it was £141M. By 2024 it was £250M. Every year of dithering doesn't just cost money — it makes the final bill bigger. At this rate, the estimate will hit £500M before a decision is made. Inaction is the most expensive option of all.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════ METHODOLOGY ══════ -->
+<section class="methodology-section" id="methodology">
+  <div class="section-inner">
+    <div class="section-header">
+      <h2>How We Estimated These Numbers</h2>
+      <hr class="section-rule">
+    </div>
+
+    <p><strong>Days closed:</strong> Calculated from 10 April 2019 (motor vehicle closure date) to today. The bridge was additionally closed to all users from 13 August 2020 to 17 July 2021.</p>
+
+    <p><strong>Extra vehicle-hours:</strong> Before closure, ~20,000 vehicles/day used the bridge. Studies indicate ~15,000 of those rerouted (the rest were "evaporated" — trips not taken or shifted to other modes). We estimate an average of 12 minutes additional journey time per diverted vehicle (conservative, given Putney Bridge queues), yielding ~3,000 extra vehicle-hours per weekday. Summed over ~1,750 weekdays since closure (with reduced estimates for weekends and pandemic periods), this produces our running total.</p>
+
+    <p><strong>CO₂ emissions:</strong> Using the 15,000 diverted vehicles figure, an average additional distance of 3.2km per diversion, and DEFRA's average car emission factor of 164g CO₂/km, we estimate additional daily emissions of ~7.9 tonnes CO₂. This is cumulated over the closure period with adjustments for pandemic-era traffic reductions (2020–21).</p>
+
+    <p><strong>Money spent:</strong> Based on H&amp;F Council's publicly reported figure of £54M+ spent by October 2024, which includes £37M on stabilisation and £17M on pre-restoration works. We extrapolate ongoing costs at approximately £15,000/day based on reported spending rates.</p>
+
+    <p><strong>Traffic data:</strong> DfT traffic counts show Putney Bridge vehicle numbers rose 16% from 32,083 to 37,239 between 2020–2023. The INRIX 2022 Global Traffic Scorecard ranked the A219 through Putney High Street as London's most congested corridor, with drivers losing 47 hours per year — and explicitly cited the Hammersmith Bridge closure as a contributing factor. However, some analyses suggest overall area-wide traffic fell due to pandemic effects and trip evaporation. We present both perspectives.</p>
+
+    <p><strong>A note on honesty:</strong> Some numbers on this site are estimates. Where data is solid, we say so. Where we're extrapolating, we say that too. The point isn't spurious precision — it's to make tangible what years of inaction actually cost. All source data comes from council reports, DfT statistics, TfL data, and parliamentary records.</p>
+  </div>
+</section>
+
+<!-- ══════ FOOTER ══════ -->
+<footer>
+  <p class="footer-tagline">"The bridge survived three IRA bombs. It may not survive three levels of government."</p>
+  <p>
+    Data sourced from <a href="https://www.lbhf.gov.uk/transport-and-roads/hammersmith-bridge" target="_blank">H&amp;F Council</a>,
+    <a href="https://www.gov.uk/government/collections/hammersmith-bridge-taskforce" target="_blank">DfT Taskforce</a>,
+    <a href="https://tfl.gov.uk/travel-information/improvements-and-projects/hammersmith-bridge" target="_blank">TfL</a>, and
+    <a href="https://hansard.parliament.uk/Lords/2024-12-18/debates/F902F080-6613-479C-8840-C4902D99AEBF/HammersmithBridge" target="_blank">Parliamentary records</a>, and
+    <a href="https://inrix.com/press-releases/2022-global-traffic-scorecard-uk/" target="_blank">INRIX Traffic Scorecard</a>.
+  </p>
+  <p style="margin-top: 0.5rem;">
+    Built by frustrated residents. Want to contribute? <a href="mailto:fixhammersmithbridge@example.com">Get in touch</a>.
+  </p>
+</footer>
+
+<!-- ══════ SCRIPTS ══════ -->
+<script>
+  // ── FORCE SCROLL TO TOP ON LOAD ──
+  if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+  }
+  window.addEventListener('load', function() {
+    window.scrollTo(0, 0);
+  });
+  window.scrollTo(0, 0);
+
+  // ── CLOSE MOBILE NAV ON LINK CLICK ──
+  document.querySelectorAll('.nav-links a').forEach(function(link) {
+    link.addEventListener('click', function() {
+      document.querySelector('.nav-links').classList.remove('open');
+    });
+  });
+
+  // ── LIVE COUNTERS ──
+  const CLOSURE_DATE = new Date('2019-04-10T00:00:00');
+
+  function updateCounters() {
+    const now = new Date();
+    const days = Math.floor((now - CLOSURE_DATE) / (1000 * 60 * 60 * 24));
+
+    // Days closed
+    document.getElementById('days-closed').textContent = days.toLocaleString();
+
+    // Money spent: £54M by Oct 2024, + ~£15k/day ongoing
+    const oct2024 = new Date('2024-10-01');
+    const daysSinceOct2024 = Math.max(0, Math.floor((now - oct2024) / (1000*60*60*24)));
+    const totalSpent = 54000000 + (daysSinceOct2024 * 15000);
+    document.getElementById('money-spent').textContent = '£' + (totalSpent / 1000000).toFixed(1) + 'M';
+
+    // Extra vehicle-hours: ~3,000/weekday, reduced during pandemic
+    // Rough: 2019 (Apr-Dec): 180 weekdays × 3000 = 540k
+    // 2020: pandemic year, ~50% = 130 weekdays × 1500 = 195k
+    // 2021: recovery, ~70% = 180 weekdays × 2100 = 378k
+    // 2022-2026: normal, weekdays × 3000
+    const yearEstimates = {
+      2019: 540000,   // partial year, pre-pandemic
+      2020: 195000,   // pandemic
+      2021: 378000,   // recovery
+    };
+    let vehicleHours = 540000 + 195000 + 378000; // 2019-2021
+
+    // 2022 onwards: count weekdays
+    const start2022 = new Date('2022-01-01');
+    let d = new Date(start2022);
+    let weekdayCount = 0;
+    while (d <= now) {
+      const dow = d.getDay();
+      if (dow !== 0 && dow !== 6) weekdayCount++;
+      d.setDate(d.getDate() + 1);
+    }
+    vehicleHours += weekdayCount * 3000;
+
+    if (vehicleHours > 1000000) {
+      document.getElementById('vehicle-hours').textContent = (vehicleHours / 1000000).toFixed(1) + 'M';
+    } else {
+      document.getElementById('vehicle-hours').textContent = Math.round(vehicleHours / 1000).toLocaleString() + 'K';
+    }
+
+    // CO2: ~7.9 tonnes/day (weekdays), reduced during pandemic
+    // Similar approach
+    let co2 = (540000/3000)*7.9 + (195000/1500)*3.95 + (378000/2100)*5.53;
+    co2 += weekdayCount * 7.9;
+    document.getElementById('co2-extra').textContent = Math.round(co2).toLocaleString();
+
+    // Taskforce meetings: at least 12+ since 2020
+    document.getElementById('taskforce-meetings').textContent = '12+';
+  }
+
+  updateCounters();
+  setInterval(updateCounters, 60000); // update every minute
+
+  // PM count: May (to Jul 2019), Johnson (to Sep 2022), Truss (to Oct 2022), Sunak (to Jul 2024), Starmer
+  document.getElementById('pms-count').textContent = '5';
+
+  // ── SCROLL ANIMATIONS ──
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // ── SMOOTH SCROLL ──
+  document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
