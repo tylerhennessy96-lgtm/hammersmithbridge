@@ -40,15 +40,14 @@
   }
   nav .logo, nav a.logo, nav a.logo:visited, nav a.logo:hover, nav a.logo:active {
     color: var(--gold-accent);
-    font-size: clamp(0.7rem, 2.5vw, 1.1rem);
+    font-size: 1.1rem;
     font-weight: bold;
-    letter-spacing: clamp(0.3px, 0.2vw, 1px);
+    letter-spacing: 1px;
     text-transform: uppercase;
     display: flex;
     align-items: center;
     text-decoration: none;
     cursor: pointer;
-    white-space: nowrap;
   }
   nav .nav-links { display: flex; gap: 1.5rem; }
   nav .nav-links a {
@@ -176,25 +175,6 @@
     .update-label { font-size: 0.58rem; padding: 0.12rem 0.4rem; }
     .update-date { font-size: 0.75rem; }
     .update-text { white-space: normal; font-size: 0.72rem; flex-basis: 100%; margin-top: 0.15rem; line-height: 1.3; }
-    .update-arrow { display: none; }
-  }
-  @media (max-width: 480px) {
-    .latest-update-banner {
-      padding: 0.5rem 0.7rem;
-      gap: 0.25rem;
-      flex-wrap: wrap;
-      align-items: flex-start;
-    }
-    .update-pulse { width: 5px; height: 5px; margin-top: 4px; }
-    .update-label { font-size: 0.52rem; padding: 0.1rem 0.3rem; letter-spacing: 0.5px; }
-    .update-date { font-size: 0.68rem; }
-    .update-text {
-      white-space: normal;
-      font-size: 0.68rem;
-      flex-basis: 100%;
-      margin-top: 0.1rem;
-      line-height: 1.3;
-    }
     .update-arrow { display: none; }
   }
 
@@ -757,6 +737,23 @@
   @media (max-width: 480px) {
     nav .logo { font-size: 0.85rem; letter-spacing: 0.5px; }
     nav .logo svg { width: 36px; height: 16px; }
+    .latest-update-banner {
+      padding: 0.5rem 0.7rem;
+      gap: 0.25rem;
+      flex-wrap: wrap;
+      align-items: flex-start;
+    }
+    .update-pulse { width: 5px; height: 5px; margin-top: 4px; }
+    .update-label { font-size: 0.52rem; padding: 0.1rem 0.3rem; letter-spacing: 0.5px; }
+    .update-date { font-size: 0.68rem; }
+    .update-text {
+      white-space: normal;
+      font-size: 0.68rem;
+      flex-basis: 100%;
+      margin-top: 0.1rem;
+      line-height: 1.3;
+    }
+    .update-arrow { display: none; }
     .counters { grid-template-columns: 1fr; }
     .hero h1 { font-size: 1.7rem; }
     .hero .subtitle { font-size: 1.2rem; }
@@ -841,8 +838,8 @@
 <a href="#latest-update" class="latest-update-banner" id="latest-banner">
   <span class="update-pulse"></span>
   <span class="update-label">LATEST UPDATE</span>
-  <span class="update-date">Late Feb 2026</span>
-  <span class="update-text">— Albert Bridge closes too; repair estimate hits £300M; reopening could take until 2035</span>
+  <span class="update-date">Feb 2026</span>
+  <span class="update-text">— DfT reconvenes taskforce, says bridge is "good candidate" for Structures Fund</span>
   <span class="update-arrow">&rarr;</span>
 </a>
 
@@ -899,7 +896,7 @@
       <div class="source">£54M+ by Oct 2024, est. ongoing</div>
     </div>
     <div class="counter-card">
-      <div class="number" id="cost-estimate">£300M</div>
+      <div class="number" id="cost-estimate">£250M</div>
       <div class="label">Estimated full repair cost</div>
       <div class="source">Up from £141M in 2020</div>
     </div>
@@ -949,7 +946,7 @@
       <div class="absurdity-card fade-in">
         <span class="absurd-stat">£250,000,000</span>
         <h3>The Ever-Rising Quote</h3>
-        <p>The repair estimate has more than doubled from £141M in 2020 to £300M today. At this rate of increase, it'll cost £500M by the time they actually start.</p>
+        <p>The repair estimate has nearly doubled from £141M in 2020 to £250M today. At this rate of increase, it'll cost £500M by the time they actually start.</p>
       </div>
       <div class="absurdity-card fade-in">
         <span class="absurd-stat">£54M+ spent</span>
@@ -1149,25 +1146,14 @@
         <span class="who-tag tag-govt">Department for Transport</span>
       </div>
 
-      <div class="timeline-item fade-in">
-        <div class="timeline-date">Early February 2026</div>
+      <div class="timeline-item latest fade-in" id="latest-update">
+        <div class="timeline-date">February 2026 <span class="latest-tag">LATEST</span></div>
         <h3>A Glimmer? Taskforce Reconvened, Fund Earmarked</h3>
         <p>Roads Minister Simon Lightwood announces the DfT will reconvene the Hammersmith Bridge Taskforce — and specifically identifies the bridge as "a good candidate for investment" from the Structures Fund. He states the government intends to "consider the viability of future funding for the next stage of works through this route." Note the language: <em>consider the viability of future funding.</em> Not "fund." Not "commit." Consider. The viability. Of future funding. As the bridge approaches its 7th anniversary of closure to cars on 10 April 2026.</p>
+        <p style="margin-top: 0.8rem; padding-top: 0.8rem; border-top: 1px solid rgba(212,168,67,0.2);"><strong>Where things stand:</strong> £54M+ of public money spent. £20.2M owed to the council by DfT and TfL. Repair estimate: £250M. No reopening date for motor vehicles. The saga enters its eighth year.</p>
         <span class="who-tag tag-govt">Roads Minister / DfT</span>
         <span class="who-tag tag-tfl">TfL</span>
         <span class="who-tag tag-council">H&amp;F Council</span>
-      </div>
-
-      <div class="timeline-item latest fade-in" id="latest-update">
-        <div class="timeline-date">Late February 2026 <span class="latest-tag">LATEST</span></div>
-        <h3>Albert Bridge Falls Too — London's Bridge Crisis Deepens</h3>
-        <p>As if to prove the universe has a sense of irony, Albert Bridge — one of the few remaining crossings Londoners have been relying on <em>because</em> Hammersmith Bridge is shut — closes to motor traffic on 9 February after inspectors find a cracked cast-iron component. Wandsworth Council notes local travel "is already strained by the long-term closure of Hammersmith Bridge." Repairs could take up to a year. Two Victorian bridges down, zero urgency from anyone in charge.</p>
-        <p>Meanwhile, protesters gather in Barnes demanding action after nearly seven years of closure. Guido Fawkes reveals the government's own Hammersmith Bridge Taskforce has met just once in 13 months. The cost estimate quietly climbs to £300M — up from £250M — and Labour MP Fleur Anderson warns the bridge may not reopen to vehicles until <strong>2035</strong>. Local Conservatives pledge that if elected in May, they'll invite engineers to propose a temporary bridge. The finger-pointing between DfT, TfL, and H&amp;F Council continues unabated.</p>
-        <p style="margin-top: 0.8rem; padding-top: 0.8rem; border-top: 1px solid rgba(212,168,67,0.2);"><strong>Where things stand:</strong> £54M+ of public money spent. £20.2M owed to the council by DfT and TfL. Repair estimate now: £300M (and rising). No reopening date for motor vehicles. A second London bridge has fallen. The saga enters its eighth year.</p>
-        <span class="who-tag tag-govt">DfT / Roads Minister</span>
-        <span class="who-tag tag-tfl">TfL</span>
-        <span class="who-tag tag-council">H&amp;F Council</span>
-        <span class="who-tag tag-council">Wandsworth Council</span>
       </div>
 
     </div>
@@ -1528,14 +1514,14 @@
 
       <div class="absurdity-card fade-in" style="border-left-color: var(--thames-light);">
         <span class="absurd-stat">2–3 Hospitals</span>
-        <h3>What £300M Could Build Instead</h3>
-        <p>The government's New Hospital Programme averages ~£93M per hospital. The £300M repair estimate for Hammersmith Bridge could build three entire new hospitals. The £54M already spent on stabilisation alone could have built a new mental health facility.</p>
+        <h3>What £250M Could Build Instead</h3>
+        <p>The government's New Hospital Programme averages ~£93M per hospital. The £250M repair estimate for Hammersmith Bridge could build two to three entire new hospitals. The £54M already spent on stabilisation alone could have built a new mental health facility.</p>
       </div>
 
       <div class="absurdity-card fade-in" style="border-left-color: var(--alert-red);">
-        <span class="absurd-stat">£40M → £300M</span>
+        <span class="absurd-stat">£40M → £250M</span>
         <h3>The Cost of Delay Is Delay</h3>
-        <p>When the bridge first closed in 2019, the repair estimate was £40M. By 2020 it was £141M. By 2024 it was £250M. By 2026 it's £300M. Every year of dithering doesn't just cost money — it makes the final bill bigger. At this rate, the estimate will hit £500M before a decision is made. Inaction is the most expensive option of all.</p>
+        <p>When the bridge first closed in 2019, the repair estimate was £40M. By 2020 it was £141M. By 2024 it was £250M. Every year of dithering doesn't just cost money — it makes the final bill bigger. At this rate, the estimate will hit £500M before a decision is made. Inaction is the most expensive option of all.</p>
       </div>
 
     </div>
